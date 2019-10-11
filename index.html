@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #mycanvas {
+        border: 1px red solid;
+    }
+</style>
+
+<body>
+    <canvas id="mycanvas" width="600" height="600"></canvas>
+    <script>
+        var canvas = document.getElementById('mycanvas');
+        var context = canvas.getContext('2d');
+        var img = new Image();
+        img.src = './img/clock.jpg';
+        img.onload = function () {
+            clock();
+            setInterval(clock, 1000)
+        }
+
+        function clock() {
+            //获取时间
+            var second = new Date().getSeconds();
+            var miu = new Date().getMinutes();
+            var hour = new Date().getHours() + (miu / 60);
+            context.clearRect(0, 0, canvas.height, canvas.width);
+
+            context.beginPath();
+            context.arc(300, 300, 300, 0, Math.PI * 2, false);
+            context.stroke();
+            context.closePath();
+            context.clip();
+            context.drawImage(img, 0, 0, canvas.height, canvas.width);
+
+            //小时
+            for (var i = 0; i < 12; i++) {
+                context.save();
+                context.beginPath();
+                context.translate(300, 300);
+                context.rotate(Math.PI * 2 / 12 * i)
+                context.moveTo(0, -300);
+                context.lineTo(0, -280);
+                context.lineWidth = 5.5;
+                context.strokeStyle = 'black';
+                context.stroke();
+                context.closePath();
+                context.restore();
+            }
+
+            //分钟针 有问题重复
+            for (var j = 0; j < 60; j++) {
+                if(j != i){
+                    context.save();
+                context.beginPath();
+                context.translate(300, 300);
+                context.rotate(Math.PI * 2 / 60 * j)
+                context.moveTo(0, -300);
+                context.lineTo(0, -290);
+                context.lineWidth = 3.5;
+                context.strokeStyle = 'blue';
+                context.stroke();
+                context.closePath();
+                context.restore();
+                }
+                
+            }
+            //画秒针
+            context.save();
+            context.beginPath();
+            context.translate(300, 300);
+            context.rotate(Math.PI * 2 / 60 * second)
+            context.moveTo(0, 30);
+            context.lineTo(0, -270);
+            context.lineWidth = 2.5;
+            context.strokeStyle = 'blue';
+            context.stroke();
+            context.closePath();
+            context.restore();
+
+            //分针
+            context.save();
+            context.beginPath();
+            context.translate(300, 300);
+            context.rotate(Math.PI * 2 / 60 * miu)
+            context.moveTo(0, 30);
+            context.lineTo(0, -250);
+            context.lineWidth = 2.5;
+            context.strokeStyle = 'red';
+            context.stroke();
+            context.closePath();
+            context.restore();
+             //小时针
+             context.save();
+            context.beginPath();
+            context.translate(300, 300);
+            context.rotate(Math.PI * 2 / 12 * hour)
+            context.moveTo(0, 30);
+            context.lineTo(0, -240);
+            context.lineWidth = 2.5;
+            context.strokeStyle = 'yellow';
+            context.stroke();
+            context.closePath();
+            context.restore();
+
+            //中心小圆
+            context.beginPath();
+            context.arc(300,300,10,0,Math.PI*2,false);
+            context.strokeStyle = 'black';
+            context.stroke();
+            context.fillStyle = 'white';
+            context.fill();
+            context.closePath();
+
+            //指针上小圆
+            context.save();
+            context.beginPath();
+            context.translate(300, 300);
+            context.rotate(Math.PI * 2 / 60 * second)
+            context.arc(0,-170,10,0,Math.PI*2,false);
+            context.strokeStyle = 'black';
+            context.stroke();
+            context.fillStyle = 'white';
+            context.fill();
+            context.closePath();
+            context.restore();
+
+            //文字
+            context.font = '20px Georgia';
+            context.fillStyle = 'red';
+            context.fillText('Made In Chian',240,500)
+            context.fillText(`${(new Date()).toLocaleTimeString()}`,240,400)
+        }
+    </script>
+</body>
+
+</html>
